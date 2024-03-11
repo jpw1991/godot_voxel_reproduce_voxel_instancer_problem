@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://byoi3l3ncyjri"]
+[gd_scene load_steps=13 format=3 uid="uid://cobntg47xu5ss"]
 
-[ext_resource type="ZN_FastNoiseLite" uid="uid://cefkn3eg11k0w" path="res://noise.tres" id="1_cyvqd"]
-[ext_resource type="Shader" path="res://Voxel/smooth_texture_array_shader.gdshader" id="1_qqgiq"]
-[ext_resource type="CompressedTexture2DArray" uid="uid://bmkrs5vpl1qjg" path="res://Voxel/texture_array.png" id="2_0rhka"]
-[ext_resource type="VoxelInstanceLibraryMultiMeshItem" uid="uid://bjlbgtvy8spqb" path="res://new_voxel_instance_library_multi_mesh_item.tres" id="4_rdggm"]
+[ext_resource type="ZN_FastNoiseLite" uid="uid://cefkn3eg11k0w" path="res://noise.tres" id="1_onrkm"]
+[ext_resource type="Shader" path="res://Voxel/smooth_texture_array_shader.gdshader" id="2_x1ikp"]
+[ext_resource type="CompressedTexture2DArray" uid="uid://bmkrs5vpl1qjg" path="res://Voxel/texture_array.png" id="3_dt2pk"]
+[ext_resource type="VoxelInstanceLibraryMultiMeshItem" uid="uid://bjlbgtvy8spqb" path="res://new_voxel_instance_library_multi_mesh_item.tres" id="4_olliw"]
+[ext_resource type="Script" path="res://workaround.gd" id="5_xl2hl"]
 
 [sub_resource type="ZN_FastNoiseLiteGradient" id="ZN_FastNoiseLiteGradient_hbsn3"]
 
@@ -26,7 +27,7 @@ graph_data = {
 "10": {
 "auto_connect": true,
 "gui_position": Vector2(620, -140),
-"noise": ExtResource("1_cyvqd"),
+"noise": ExtResource("1_onrkm"),
 "type": "FastNoise2D"
 },
 "11": {
@@ -88,12 +89,12 @@ graph_data = {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2o2u0"]
 render_priority = 0
-shader = ExtResource("1_qqgiq")
+shader = ExtResource("2_x1ikp")
 shader_parameter/u_transition_mask = null
-shader_parameter/u_albedo_array = ExtResource("2_0rhka")
+shader_parameter/u_albedo_array = ExtResource("3_dt2pk")
 
 [sub_resource type="VoxelInstanceLibrary" id="VoxelInstanceLibrary_yto27"]
-item_1 = ExtResource("4_rdggm")
+item_1 = ExtResource("4_olliw")
 
 [node name="Node3D" type="Node3D"]
 
@@ -104,6 +105,11 @@ material = SubResource("ShaderMaterial_2o2u0")
 
 [node name="VoxelInstancer" type="VoxelInstancer" parent="VoxelLodTerrain"]
 library = SubResource("VoxelInstanceLibrary_yto27")
+script = ExtResource("5_xl2hl")
+
+[node name="Timer" type="Timer" parent="VoxelLodTerrain/VoxelInstancer"]
+one_shot = true
+autostart = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -27.8674, 17.0614, -33.1116)
@@ -120,3 +126,5 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -30, 2
 pixel_size = 0.05
 text = "y=20
 "
+
+[connection signal="timeout" from="VoxelLodTerrain/VoxelInstancer/Timer" to="VoxelLodTerrain/VoxelInstancer" method="_on_timer_timeout"]
