@@ -1,0 +1,21 @@
+[gd_resource type="VoxelInstanceLibraryMultiMeshItem" load_steps=5 format=3 uid="uid://bjlbgtvy8spqb"]
+
+[ext_resource type="PackedScene" uid="uid://dem1x35frkagh" path="res://multimesh.tscn" id="1_i847h"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ghtu6"]
+
+[sub_resource type="VoxelInstanceGenerator" id="VoxelInstanceGenerator_ifif2"]
+min_height = 20.0
+max_height = 25.0
+noise = SubResource("FastNoiseLite_ghtu6")
+noise_dimension = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ni37v"]
+
+[resource]
+name = "test"
+lod_index = 1
+generator = SubResource("VoxelInstanceGenerator_ifif2")
+persistent = true
+scene = ExtResource("1_i847h")
+mesh = SubResource("BoxMesh_ni37v")

@@ -1,0 +1,111 @@
+[gd_scene load_steps=12 format=3 uid="uid://byoi3l3ncyjri"]
+
+[ext_resource type="ZN_FastNoiseLite" uid="uid://cefkn3eg11k0w" path="res://noise.tres" id="1_cyvqd"]
+[ext_resource type="Shader" path="res://Voxel/smooth_texture_array_shader.gdshader" id="1_qqgiq"]
+[ext_resource type="CompressedTexture2DArray" uid="uid://bmkrs5vpl1qjg" path="res://Voxel/texture_array.png" id="2_0rhka"]
+[ext_resource type="VoxelInstanceLibraryMultiMeshItem" uid="uid://bjlbgtvy8spqb" path="res://new_voxel_instance_library_multi_mesh_item.tres" id="4_rdggm"]
+
+[sub_resource type="ZN_FastNoiseLiteGradient" id="ZN_FastNoiseLiteGradient_hbsn3"]
+
+[sub_resource type="ZN_FastNoiseLite" id="ZN_FastNoiseLite_r44kj"]
+warp_noise = SubResource("ZN_FastNoiseLiteGradient_hbsn3")
+
+[sub_resource type="Curve" id="Curve_kvx24"]
+max_value = 50.0
+_data = [Vector2(0, 0), 0.0, 50.0, 0, 1, Vector2(1, 50), 50.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="VoxelGeneratorGraph" id="VoxelGeneratorGraph_0l3lq"]
+graph_data = {
+"connections": [[8, 0, 4, 0], [7, 0, 11, 0], [5, 0, 8, 1], [3, 0, 7, 1], [3, 0, 10, 1], [2, 0, 5, 0], [13, 0, 8, 0], [12, 0, 13, 0], [11, 0, 12, 0], [10, 0, 9, 0], [1, 0, 7, 0], [1, 0, 10, 0]],
+"nodes": {
+"1": {
+"gui_position": Vector2(440, 50),
+"type": "InputX"
+},
+"10": {
+"auto_connect": true,
+"gui_position": Vector2(620, -140),
+"noise": ExtResource("1_cyvqd"),
+"type": "FastNoise2D"
+},
+"11": {
+"gui_position": Vector2(680, 20),
+"max0": 1.0,
+"max1": 1.0,
+"min0": -1.0,
+"min1": -1.0,
+"type": "Remap"
+},
+"12": {
+"curve": SubResource("Curve_kvx24"),
+"gui_position": Vector2(820, 20),
+"type": "Curve"
+},
+"13": {
+"b": -1.0,
+"gui_position": Vector2(960, 20),
+"type": "Multiply"
+},
+"2": {
+"gui_position": Vector2(440, 150),
+"type": "InputY"
+},
+"3": {
+"gui_position": Vector2(440, 250),
+"type": "InputZ"
+},
+"4": {
+"auto_connect": true,
+"gui_position": Vector2(1380, 80),
+"type": "OutputSDF"
+},
+"5": {
+"auto_connect": true,
+"gui_position": Vector2(700, 160),
+"height": 0.0,
+"type": "SdfPlane"
+},
+"7": {
+"auto_connect": true,
+"gui_position": Vector2(540, 0),
+"noise": SubResource("ZN_FastNoiseLite_r44kj"),
+"type": "FastNoise2D"
+},
+"8": {
+"gui_position": Vector2(1200, 80),
+"type": "Add"
+},
+"9": {
+"gui_position": Vector2(920, -80),
+"type": "OutputSingleTexture"
+}
+},
+"version": 2
+}
+
+[sub_resource type="VoxelMesherTransvoxel" id="VoxelMesherTransvoxel_tqblo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2o2u0"]
+render_priority = 0
+shader = ExtResource("1_qqgiq")
+shader_parameter/u_transition_mask = null
+shader_parameter/u_albedo_array = ExtResource("2_0rhka")
+
+[sub_resource type="VoxelInstanceLibrary" id="VoxelInstanceLibrary_yto27"]
+item_1 = ExtResource("4_rdggm")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="VoxelLodTerrain" type="VoxelLodTerrain" parent="."]
+generator = SubResource("VoxelGeneratorGraph_0l3lq")
+mesher = SubResource("VoxelMesherTransvoxel_tqblo")
+material = SubResource("ShaderMaterial_2o2u0")
+
+[node name="VoxelInstancer" type="VoxelInstancer" parent="VoxelLodTerrain"]
+library = SubResource("VoxelInstanceLibrary_yto27")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -27.8674, 17.0614, -33.1116)
+
+[node name="VoxelViewer" type="VoxelViewer" parent="Camera3D"]

@@ -1,0 +1,9 @@
+[gd_resource type="VoxelInstanceGenerator" load_steps=2 format=3 uid="uid://dxbvyghwyqjsg"]
+
+[ext_resource type="FastNoiseLite" uid="uid://jhxv2lrkmtj4" path="res://new_fast_noise_lite.tres" id="1_po77n"]
+
+[resource]
+min_height = 15.0
+max_height = 20.0
+noise = ExtResource("1_po77n")
+noise_dimension = 0
